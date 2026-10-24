@@ -34,72 +34,89 @@ with st.sidebar:
     st.title("🧬 ThalScreen AI")
     st.caption("Research Demonstration Platform")
     st.divider()
-    st.write("📊 Research Dashboard")
-    st.write("🧠 ML Prediction — Upcoming")
-    st.write("🔍 Explainable AI — Upcoming")
-    st.write("🌐 Federated Learning — Upcoming")
+
+    selected_page = st.radio(
+        "Navigation",
+        [
+            "📊 Research Dashboard",
+            "🧠 ML Prediction",
+            "🔍 Explainable AI — Upcoming",
+            "🌐 Federated Learning — Upcoming"
+        ],
+        label_visibility="collapsed"
+    )
+
     st.info("Research demonstration only.")
 
-st.markdown("""
-<div class="hero">
-<h1>ThalScreen AI</h1>
-<p>Explainable Machine Learning for
-β-Thalassemia Trait Screening</p>
-</div>
-""", unsafe_allow_html=True)
 
-st.write("")
-st.subheader("Research Overview")
+if selected_page == "🧠 ML Prediction":
+    from ml_prediction import render_prediction_page
+    render_prediction_page()
 
-a, b, c, d = st.columns(4)
+elif selected_page == "📊 Research Dashboard":
+    st.markdown("""
+    <div class="hero">
+    <h1>ThalScreen AI</h1>
+    <p>Explainable Machine Learning for
+    β-Thalassemia Trait Screening</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-a.metric("Total Samples", "467")
-b.metric("βTT Samples", "143")
-c.metric("Anemia Samples", "324")
-d.metric("Formula Inputs", "47")
+    st.write("")
+    st.subheader("Research Overview")
 
-st.divider()
+    a, b, c, d = st.columns(4)
 
-left, right = st.columns(2)
+    a.metric("Total Samples", "467")
+    b.metric("βTT Samples", "143")
+    c.metric("Anemia Samples", "324")
+    d.metric("Formula Inputs", "47")
 
-with left:
-    st.subheader("Dataset Distribution")
-    df = pd.DataFrame({
-        "Class": ["β-Thalassemia Trait", "Anemia"],
-        "Samples": [143, 324]
-    })
-    fig = px.pie(
-        df,
-        names="Class",
-        values="Samples",
-        hole=0.55,
-        color_discrete_sequence=["#0D9488", "#94A3B8"]
+    st.divider()
+
+    left, right = st.columns(2)
+
+    with left:
+        st.subheader("Dataset Distribution")
+        df = pd.DataFrame({
+            "Class": ["β-Thalassemia Trait", "Anemia"],
+            "Samples": [143, 324]
+        })
+        fig = px.pie(
+            df,
+            names="Class",
+            values="Samples",
+            hole=0.55,
+            color_discrete_sequence=["#0D9488", "#94A3B8"]
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    with right:
+        st.subheader("Primary Model Performance")
+        st.metric("Nested CV Accuracy", "95.07%")
+        st.metric("Nested CV Sensitivity", "94.36%")
+        st.metric("Nested CV ROC-AUC", "0.9823")
+        st.caption(
+            "Fully nested 5-fold cross-validation "
+            "results; not external clinical validation."
+        )
+
+    st.divider()
+    st.subheader("Research Highlights")
+
+    st.markdown("""
+    - **47 formula-based inputs** evaluated
+    - **Feature subset comparisons:** Top-3, 4, 6, 10, 19
+    - **Random Forest** with nested cross-validation
+    - **SHAP** explainability analysis
+    - **Simulated federated learning** comparison
+    - **Probability calibration** analysis
+    """)
+
+    st.warning(
+        "This platform is for research demonstration. "
+        "It is not a clinical diagnostic device."
     )
-    st.plotly_chart(fig, use_container_width=True)
 
-with right:
-    st.subheader("Primary Model Performance")
-    st.metric("Nested CV Accuracy", "95.07%")
-    st.metric("Nested CV Sensitivity", "94.36%")
-    st.metric("Nested CV ROC-AUC", "0.9823")
-    st.caption(
-        "Fully nested 5-fold cross-validation "
-        "results; not external clinical validation."
-    )
-
-st.divider()
-st.subheader("Research Highlights")
-
-st.markdown("""
-- **47 formula-based inputs** evaluated
-- **Feature subset comparisons:** Top-3, 4, 6, 10, 19
-- **Random Forest** with nested cross-validation
-- **SHAP** explainability analysis
-- **Simulated federated learning** comparison
-- **Probability calibration** analysis
-""")
-
-st.warning(
-    "This platform is for research demonstration. "
-    "It is not a clinical diagnostic device."
-)
+else:
+    st.info("This research module is coming soon.")
