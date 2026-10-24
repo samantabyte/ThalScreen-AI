@@ -218,3 +218,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Research and sensitive files
+.env
+.env.*
+.streamlit/secrets.toml
+*.xlsx
+*.xls
+*.joblib
+*.pkl
+dataset/
+data/
+models/
+results/
+logs/
